@@ -3,6 +3,17 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="MemberDAO">
+	<select id="selectCountMemberEmail" parameterType="string" resultType="_int">
+		SELECT	COUNT(ACCOUNT)
+		FROM	MEMBER
+		WHERE	EMAIL = #{email}
+	</select>
+	<select id="selectCountMemberNickname" parameterType="string" resultType="_int">
+		SELECT	COUNT(ACCOUNT)
+		FROM	MEMBER
+		WHERE	NICKNAME = #{nickname}
+	
+	</select>
 	<insert id="insertMember" parameterType="MemberVO">
 		INSERT	INTO MEMBER (
 			ACCOUNT
@@ -10,7 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			, NICKNAME
 			, PASSWORD
 			, REGIST_DATE
-			
+			, SALT
 		)
 		VALUES (
 			MEMBER_ACCOUNT_SEQ.NEXTVAL
@@ -18,7 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			, #{nickname}
 			, #{password}
 			, SYSDATE
-			
+			, #{salt}
 		)
 	</insert>
 	<select id="selectMember" parameterType="MemberVO" resultType="MemberVO">
@@ -26,9 +37,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				,EMAIL
 				,NICKNAME
 				,REGIST_DATE registDate
+				,SALT
 		FROM	MEMBER
 		WHERE	EMAIL = #{email}
 		AND		PASSWORD = #{password}
+	</select>
+	<select id="selectSalt" parameterType="string" resultType="string">
+		SELECT	NVL(SALT,'')
+		FROM	MEMBER
+		WHERE	EMAIL = ${email}
 	</select>
 	<delete id="deleteMember" parameterType="MemberVO">
 		DELETE FROM MEMBER

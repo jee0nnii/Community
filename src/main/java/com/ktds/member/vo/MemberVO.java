@@ -14,7 +14,15 @@ public class MemberVO {
 	@NotEmpty(message = "비밀번호 :: * 필수입력값!!")
 	private String password;
 	private String registDate;
+	private String salt;
 	
+	
+	public String getSalt() {
+		return salt;
+	}
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
 	public int getAccount() {
 		return account;
 	}
