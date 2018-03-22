@@ -6,13 +6,26 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>${community.title}</title>
+<script type="text/javascript" src="<c:url value="/static/js/jquery-3.3.1.min.js"/>"></script>
+<script type="text/javascript">
+$().ready(function(){
+	$("#writeReplyBtn").click(function(){
+		console.log($("#writeReplyForm").serialize());
+		$.post("<c:url value="/api/reply/${community.id}"/>",
+				$("#writeReplyForm").serialize(),
+				function(response){
+			alert("등록됨");
+			console.log(response);
+		});
+		
+	});
+});
+</script>
 </head>
 <body>
 	<div id="wrapper">
 		<jsp:include page="/WEB-INF/view/template/menu.jsp" />
 		<h1>${community.title}</h1>
-
-
 		<h3>
 			<c:choose>
 				<c:when test="${not empty community.memberVO }">
@@ -33,6 +46,24 @@
 			</p>
 		</c:if>
 		<p>${community.contents }</p>
+		
+		<hr>
+		<!-- 0322 댓글 -->
+		<div id ="replies"></div>
+		<div id ="createReply">
+			<form id="writeReplyForm">
+				<input type="hidden" id="parentReplyId" name="parentReplyId" value="0"/>
+				<div>
+					<textarea id="body" name="body"></textarea>
+				</div>
+				<div>
+					<input type="button" id="writeReplyBtn" value="등록"/>
+				</div>
+			</form>
+		</div>
+		<!-- 0322 댓글 -->
+		
+		
 		<a href="<c:url value = "/recommend/${community.id}"/>">추천하기</a> <a
 			href="<c:url value = "/"/>">목록으로</a>
 		<c:if

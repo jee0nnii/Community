@@ -3,6 +3,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+	<bean id ="replyController" class="com.ktds.reply.web.ReplyController">
+		<property name="replyService" ref="replyService"/>
+
+	</bean>
+
 	<!-- 컨트롤러와 서비스 의존관계 설정 -->
 	<bean id="communityController" class="com.ktds.community.web.CommunityController">
 		<property name="communityService" ref="communityService" />

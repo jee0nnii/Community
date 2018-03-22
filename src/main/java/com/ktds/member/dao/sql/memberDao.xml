@@ -45,7 +45,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="selectSalt" parameterType="string" resultType="string">
 		SELECT	NVL(SALT,'')
 		FROM	MEMBER
-		WHERE	EMAIL = ${email}
+		WHERE	EMAIL = #{email}
 	</select>
 	<delete id="deleteMember" parameterType="MemberVO">
 		DELETE FROM MEMBER
