@@ -4,7 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ktds.community.dao.CommunityDAO;
+import com.ktds.community.vo.CommunitySearchVO;
 import com.ktds.community.vo.CommunityVO;
+
+import io.github.seccoding.web.pager.Pager;
+import io.github.seccoding.web.pager.PagerFactory;
+import io.github.seccoding.web.pager.explorer.ClassicPageExplorer;
+import io.github.seccoding.web.pager.explorer.PageExplorer;
 
 public class CommunityServiceImpl implements CommunityService{
 	private CommunityDAO communityDao;	
@@ -12,8 +18,16 @@ public class CommunityServiceImpl implements CommunityService{
 		this.communityDao = communityDao;
 	}	
 	@Override
-	public List<CommunityVO> getAll() {
-		return communityDao.selectAll();
+	public PageExplorer getAll(CommunitySearchVO communitySearchVO) {
+		
+		Pager pager = PagerFactory.getPager(Pager.ORACLE, communitySearchVO.getPageNo() +"", communityDao.selectCountAll(communitySearchVO));
+		PageExplorer pageExplorer = pager.makePageExplorer(ClassicPageExplorer.class, communitySearchVO);
+		//list page explorer : 가운데로 옮
+		//classice page explorer : 선택한 자리에 그대로
+		pageExplorer.setList(communityDao.selectAll(communitySearchVO));
+		//System.out.println(pageExplorer.getList().size());
+		
+		return pageExplorer;
 	}
 	@Override
 	public boolean createCommunity(CommunityVO communityVO) {		

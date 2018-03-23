@@ -55,9 +55,19 @@ public class ReplyController {
 		
 		boolean isSuccess = replyService.createReply(replyVO);
 		
+		//0323
+		ReplyVO newReply = null;
+		if(isSuccess) {
+			newReply = replyService.readOneReply(replyVO.getId());
+			if(newReply != null) {
+			System.out.println(newReply.getId());
+			}
+		}
+		
+		
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("status", isSuccess);
-		result.put("reply", replyVO);
+		result.put("reply", newReply);
 		
 		
 		return result;

@@ -2,10 +2,14 @@ package com.ktds.community.dao;
 
 import java.util.List;
 
+import com.ktds.community.vo.CommunitySearchVO;
 import com.ktds.community.vo.CommunityVO;
 
 public interface CommunityDAO {
-	public List<CommunityVO> selectAll();
+	
+	public int selectCountAll(CommunitySearchVO communitySearchVO);
+	
+	public List<CommunityVO> selectAll(CommunitySearchVO communitySearchVO);
 	public int insertCommunity(CommunityVO communityVO);
 	//아이디로 게시글 하나만 가져오는 거
 	public CommunityVO selectOne(int id);

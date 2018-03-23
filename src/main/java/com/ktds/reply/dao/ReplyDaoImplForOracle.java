@@ -20,5 +20,10 @@ public class ReplyDaoImplForOracle extends SqlSessionDaoSupport implements Reply
 		return getSqlSession().insert("ReplyDAO.insertReply",replyVO);
 	}
 
+	@Override
+	public ReplyVO selectOneReply(int replyId) {
+		return getSqlSession().selectOne("ReplyDAO.selectOneReply", replyId);
+	}
+
 
 }

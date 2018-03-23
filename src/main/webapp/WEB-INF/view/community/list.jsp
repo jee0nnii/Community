@@ -15,48 +15,48 @@ td, th {
 <body>
 	<div id="wrapper" style="text-align: center;">
 		<jsp:include page="/WEB-INF/view/template/menu.jsp" />
-		
-			<table style="margin-left: auto; margin-right: auto;">
+
+		<div>${pageExplorer.totalCount }건의 게시물</div>
+		<table style="margin-left: auto; margin-right: auto;">
+			<tr>
+				<!-- th는 볼드에 가운데 정렬 -->
+				<th>ID</th>
+				<th>제목</th>
+				<th>작성자</th>
+				<th>작성일</th>
+				<th>조회수</th>
+			</tr>
+			<c:forEach items="${pageExplorer.list}" var="contents">
 				<tr>
-					<!-- th는 볼드에 가운데 정렬 -->
-					<th>ID</th>
-					<th>제목</th>
-					<th>작성자</th>
-					<th>작성일</th>
-					<th>조회수</th>
-				</tr>
-				<c:forEach items="${communityList}" var="contents">
-					<tr>
-						<!-- 왼쪽 정렬 -->
-						<td>${contents.id}</td>
-						<td><a href="<c:url value="/read/${contents.id}"/>">${contents.title}</a>
-							<c:if test="${not empty contents.displayFilename}">
-								<img src="<c:url value = "/static/img/save.png"/>"
-									alt="${contents.displayFilename}" style="width: 10px;" />
-							</c:if></td>
-							<!-- 닉네임(이메일) 0319 :: 데이터가 있을때 보여주고 없으면 탈퇴한 회원!!!-->
-						<td>
-						<c:choose>
-						<c:when test="${not empty contents.memberVO }">
+					<!-- 왼쪽 정렬 -->
+					<td>${contents.id}</td>
+					<td><a href="<c:url value="/read/${contents.id}"/>">${contents.title}</a>
+						<c:if test="${not empty contents.displayFilename}">
+							<img src="<c:url value = "/static/img/save.png"/>"
+								alt="${contents.displayFilename}" style="width: 10px;" />
+						</c:if></td>
+					<!-- 닉네임(이메일) 0319 :: 데이터가 있을때 보여주고 없으면 탈퇴한 회원!!!-->
+					<td><c:choose>
+							<c:when test="${not empty contents.memberVO }">
 						${contents.memberVO.nickname}&nbsp;[${contents.memberVO.email}]
 						</c:when>
-						<c:otherwise>탈퇴한 회원</c:otherwise>
+							<c:otherwise>탈퇴한 회원</c:otherwise>
 						</c:choose></td>
-						<td>${contents.writeDate}</td>
-						<td>${contents.viewCount}</td>
-					</tr>
-				</c:forEach>
-				<!-- 게시글이 없을 때!!! 등록된 게시글이 없습니다. -->
-				<!-- c:if는 if만!! //choose when otherwise로 elseif 대신함 -->
-				<!-- not empty / empty -->
-				<c:if test="${empty communityList}">
-					<tr>
-						<td colspan="5">등록된 게시글이 없습니다.</td>
-					</tr>
+					<td>${contents.writeDate}</td>
+					<td>${contents.viewCount}</td>
+				</tr>
+			</c:forEach>
+			<!-- 게시글이 없을 때!!! 등록된 게시글이 없습니다. -->
+			<!-- c:if는 if만!! //choose when otherwise로 elseif 대신함 -->
+			<!-- not empty / empty -->
+			<c:if test="${empty pageExplorer.list}">
+				<tr>
+					<td colspan="5">등록된 게시글이 없습니다.</td>
+				</tr>
 
-				</c:if>
-			</table>
-		
+			</c:if>
+		</table>
+		<form id="searchForm">${pageExplorer.make() }</form>
 		<div>
 			<a href="<c:url value="/write"/>">글쓰기</a> <a
 				href="<c:url value="/logout"/>">로그아웃</a>

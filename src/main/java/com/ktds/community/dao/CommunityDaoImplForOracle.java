@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.mybatis.spring.support.SqlSessionDaoSupport;
 
+import com.ktds.community.vo.CommunitySearchVO;
 import com.ktds.community.vo.CommunityVO;
 
 /**
@@ -15,10 +16,10 @@ import com.ktds.community.vo.CommunityVO;
 public class CommunityDaoImplForOracle extends SqlSessionDaoSupport implements CommunityDAO{
 	
 	@Override
-	public List<CommunityVO> selectAll() {
+	public List<CommunityVO> selectAll(CommunitySearchVO communitySearchVO) {
 											// 인터페이스.메소드명
 											// communityDao.xml에 가보면 그안의 네임스페이스가 인터페이스 이름이랑 똑같음
-		return getSqlSession().selectList("CommunityDAO.selectAll");
+		return getSqlSession().selectList("CommunityDAO.selectAll", communitySearchVO);
 	}
 	@Override
 	public int insertCommunity(CommunityVO communityVO) {
@@ -70,6 +71,10 @@ public class CommunityDaoImplForOracle extends SqlSessionDaoSupport implements C
 		params.put("ids", ids);
 		params.put("account", account);
 		return getSqlSession().delete("CommunityDAO.deleteCommunities", params);
+	}
+	@Override
+	public int selectCountAll(CommunitySearchVO communitySearchVO) {
+		return getSqlSession().selectOne("CommunityDAO.selectCountAll",communitySearchVO);
 	}
 
 	

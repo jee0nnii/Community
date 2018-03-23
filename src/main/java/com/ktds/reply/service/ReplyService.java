@@ -11,4 +11,5 @@ public interface ReplyService {
 	//
 	public boolean createReply(ReplyVO replyVO);
 	
+	public ReplyVO readOneReply(int replyId);
 }

@@ -25,29 +25,44 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<result column="REGIST_DATE" property="registDate"/>
 		</association>
 	</resultMap>
-	
-	<select id="selectAll" resultMap="CommunityVOMap">
-		SELECT	C.ID
-        		, C.TITLE
-      		  	, C.CONTENTS
-       			, C.ACCOUNT
-		    	, TO_CHAR(C.WRITE_DATE,'YYYY-MM-DD HH24:MI:SS') WRITE_DATE
-		        , C.VIEW_COUNT 
-		    	, C.RECOMMEND_COUNT
-		    	, C.REQUEST_IP
-		    	, C.DISPLAY_FILE_NAME
-		        , M.ACCOUNT M_ID
-		        , M.EMAIL
-		        , M.NICKNAME
-		        , M.REGIST_DATE        
+	<select id="selectCountAll" resultType="_int" parameterType="CommunitySearchVO">
+		SELECT	COUNT(C.ID)        
 		FROM	COMMUNITY C
 		        , MEMBER M
 		WHERE	C.ACCOUNT = M.ACCOUNT(+)
-		<!-- 멤버에는 데이터가 없지만 커뮤니티에는 있음
-		탈퇴를 했을때 사용자는 지우고 게시글은 유지하고자 할때 
-		(+) : outer join
-		-->
-		ORDER	BY C.ID DESC			
+
+	</select>
+	<select id="selectAll" resultMap="CommunityVOMap" parameterType="CommunitySearchVO">		
+		SELECT	*
+		FROM	(
+					SELECT	ROWNUM RNUM
+							, C.*
+					FROM	(
+								SELECT	C.ID
+						        		, C.TITLE
+						      		  	, C.CONTENTS
+						       			, C.ACCOUNT
+								    	, TO_CHAR(C.WRITE_DATE,'YYYY-MM-DD HH24:MI:SS') WRITE_DATE
+								        , C.VIEW_COUNT 
+								    	, C.RECOMMEND_COUNT
+								    	, C.REQUEST_IP
+								    	, C.DISPLAY_FILE_NAME
+								        , M.ACCOUNT M_ID
+								        , M.EMAIL
+								        , M.NICKNAME
+								        , M.REGIST_DATE        
+								FROM	COMMUNITY C
+								        , MEMBER M
+								WHERE	C.ACCOUNT = M.ACCOUNT(+)
+								/* 멤버에는 데이터가 없지만 커뮤니티에는 있음
+								탈퇴를 했을때 사용자는 지우고 게시글은 유지하고자 할때 
+								(+) : outer join
+								*/
+								ORDER	BY C.ID DESC	
+							) C
+					WHERE	ROWNUM <![CDATA[ <= ]]> #{endNumber}
+				)
+		WHERE	RNUM <![CDATA[ >= ]]> #{startNumber}			
 	</select>
 	<insert id="insertCommunity" parameterType="CommunityVO">
 		INSERT	INTO COMMUNITY (
