@@ -2,7 +2,6 @@ package com.ktds.community.web;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,12 +37,36 @@ public class CommunityController {
 	public void setCommunityService(CommunityService communityService) {
 		this.communityService = communityService;
 	}
-
+	//0326
+	@RequestMapping("/reset")
+	public String viewInitListPage(HttpSession session) {
+		session.removeAttribute("__SEARCH__");
+		return "redirect:/";
+	}
+	//0326
 	@RequestMapping("/")
-	public ModelAndView viewListPage(CommunitySearchVO communitySearchVO) {
+	public ModelAndView viewListPage(CommunitySearchVO communitySearchVO, HttpSession session) {
+		//데이터가 안넘어왔을경우
+		//1. 리스트 페이지에 처음 접근 했을 떄
+		//2. 글 내용을 보고 , 목록보기 링크를 클릭했을때
+		if(communitySearchVO.getPageNo() < 0) {
+			//세션에 저장된 CommunitySearchVO를 가져옴
+			communitySearchVO = (CommunitySearchVO) session.getAttribute("__SEARCH__");
+			//세션에 저장된 CommunitySearchVO가 없을 때 pageNo= 0으로 초기화
+			if(communitySearchVO == null) {
+				communitySearchVO = new CommunitySearchVO();
+				communitySearchVO.setPageNo(0);
+			}
+		}
+		session.setAttribute("__SEARCH__", communitySearchVO);
+		
 		ModelAndView view = new ModelAndView();
 		// web-inf/community/list.jsp
 		view.setViewName("community/list");
+		
+		//0326 : 현재 어떤 검색을 했는지 알려주는 거
+		view.addObject("search",communitySearchVO);
+		
 		PageExplorer pageExplorer = communityService.getAll(communitySearchVO);
 		view.addObject("pageExplorer", pageExplorer);
 
@@ -111,7 +134,7 @@ public class CommunityController {
 		// 실패와 성공을 구분하는 이유는? 성공하면 리스트로 실패면 라이트로 보내려고
 		// 성공이면!!
 		if (isSuccess) {
-			return new ModelAndView("redirect:/"); // 이 url로 이동해라
+			return new ModelAndView("redirect:/reset"); // 이 url로 이동해라
 		} // 실패면!!
 		/* session.setAttribute("status", "writeFail"); */
 		return new ModelAndView("redirect:/write");

@@ -30,6 +30,6 @@
 				href="<c:url value="/deleteAccount/process1"/>">탈퇴</a></li>
 		</c:if>
 
-		<li><a href="<c:url value="/"/>">Community</a>&nbsp;</li>
+		<li><a href="<c:url value="/reset"/>">Community</a>&nbsp;</li>
 	</ul>
 </div>

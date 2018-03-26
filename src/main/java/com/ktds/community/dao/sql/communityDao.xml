@@ -25,14 +25,48 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<result column="REGIST_DATE" property="registDate"/>
 		</association>
 	</resultMap>
+	<!-- 0326 검색!!!! --> 
+	<!-- 
 	<select id="selectCountAll" resultType="_int" parameterType="CommunitySearchVO">
 		SELECT	COUNT(C.ID)        
 		FROM	COMMUNITY C
 		        , MEMBER M
 		WHERE	C.ACCOUNT = M.ACCOUNT(+)
-
 	</select>
-	<select id="selectAll" resultMap="CommunityVOMap" parameterType="CommunitySearchVO">		
+	 -->
+	<select id="selectCountAll" resultType="_int" parameterType="CommunitySearchVO">
+		SELECT	COUNT(C.ID)        
+		FROM	COMMUNITY C
+		        , MEMBER M
+		WHERE	C.ACCOUNT = M.ACCOUNT(+)
+		AND		WRITE_DATE <![CDATA[<=]]> SYSDATE
+		AND		WRITE_DATE >= ADD_MONTHS(SYSDATE, -1)
+		<choose>
+			<when test ="searchType == 1">
+		AND		C.TITLE LIKE '%'||#{searchKeyword}||'%'									
+			</when>
+			<when test ="searchType == 2">
+		AND		C.CONTENTS LIKE '%'||#{searchKeyword}||'%'	
+			</when>
+			<when test ="searchType == 3">
+		AND		( C.TITLE LIKE '%'||#{searchKeyword}||'%'
+		OR		C.CONTENTS LIKE '%'||#{searchKeyword}||'%' )
+			</when>
+			<when test ="searchType == 4">
+		AND		M.NICKNAME LIKE '%'||#{searchKeyword}||'%'	
+			</when>
+			<when test ="searchType == 5">
+		AND		M.EMAIL LIKE '%'||#{searchKeyword}||'%'
+			</when>
+			<when test ="searchType == 6">
+		AND		C.DISPLAY_FILE_NAME LIKE '%'||#{searchKeyword}||'%'
+			</when>
+			<when test ="searchType == 7">
+		AND		C.DISPLAY_FILE_NAME LIKE '%.'||#{searchKeyword}
+			</when>
+		</choose>
+	</select>
+	 <select id="selectAll" resultMap="CommunityVOMap" parameterType="CommunitySearchVO">		
 		SELECT	*
 		FROM	(
 					SELECT	ROWNUM RNUM
@@ -54,6 +88,36 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 								FROM	COMMUNITY C
 								        , MEMBER M
 								WHERE	C.ACCOUNT = M.ACCOUNT(+)
+								AND		WRITE_DATE <![CDATA[<=]]> SYSDATE
+								AND		WRITE_DATE >= ADD_MONTHS(SYSDATE, -1)
+								<!-- 한달 전에 작성된 것들만! -->
+								<choose>
+									<when test ="searchType == 1">
+								AND		C.TITLE LIKE '%'||#{searchKeyword}||'%'									
+									</when>
+									<when test ="searchType == 2">
+								AND		C.CONTENTS LIKE '%'||#{searchKeyword}||'%'	
+									</when>
+									<when test ="searchType == 3">
+								AND		( C.TITLE LIKE '%'||#{searchKeyword}||'%'
+								OR		C.CONTENTS LIKE '%'||#{searchKeyword}||'%' )
+									</when>
+									<when test ="searchType == 4">
+								AND		M.NICKNAME LIKE '%'||#{searchKeyword}||'%'	
+									</when>
+									<when test ="searchType == 5">
+								AND		M.EMAIL LIKE '%'||#{searchKeyword}||'%'
+									</when>
+									<when test ="searchType == 6">
+								AND		C.DISPLAY_FILE_NAME LIKE '%'||#{searchKeyword}||'%'
+									</when>
+									<when test ="searchType == 7">
+								AND		C.DISPLAY_FILE_NAME LIKE '%.'||#{searchKeyword}
+									</when>
+								
+								</choose>
+								
+								
 								/* 멤버에는 데이터가 없지만 커뮤니티에는 있음
 								탈퇴를 했을때 사용자는 지우고 게시글은 유지하고자 할때 
 								(+) : outer join

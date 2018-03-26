@@ -4,8 +4,13 @@ import io.github.seccoding.web.pager.annotations.EndRow;
 import io.github.seccoding.web.pager.annotations.StartRow;
 
 public class CommunitySearchVO {
-
-	private int pageNo;
+	
+	// 0326
+	// 페이지 값 확인
+	private int pageNo = -1;
+	// 검색
+	private int searchType;
+	private String searchKeyword;
 	
 	@StartRow
 	private int startNumber;
@@ -30,5 +35,18 @@ public class CommunitySearchVO {
 	public void setEndNumber(int endNumber) {
 		this.endNumber = endNumber;
 	}
+	public int getSearchType() {
+		return searchType;
+	}
+	public void setSearchType(int searchType) {
+		this.searchType = searchType;
+	}
+	public String getSearchKeyword() {
+		return searchKeyword;
+	}
+	public void setSearchKeyword(String searchKeyword) {
+		this.searchKeyword = searchKeyword;
+	}
+	
 	
 }
