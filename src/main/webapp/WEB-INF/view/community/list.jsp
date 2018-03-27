@@ -88,6 +88,7 @@ td, th {
 			</div>
 		</form>
 		<div>
+		<a href="<c:url value="/admin/actionhistory"/>">STAFF</a>
 			<a href="<c:url value="/write"/>">글쓰기</a> <a
 				href="<c:url value="/logout"/>">로그아웃</a>
 		</div>

@@ -1,4 +1,4 @@
-package com.ktds.member.web;
+/*package com.ktds.member.web;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -16,11 +16,11 @@ public class MCValidation1 {
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	//String :: jsp 페이지를 리턴 
 	public String viewLoginPage(HttpSession session) {
-		/*
+		
 		 2. 세션을 그냥 가져옴!!! HttpSession session
 		 세션이 있는지 검증하기
 		 __USER__ 객체에 데이터가 있는지 확인하고 있으면 리스트로 가라!!
-		 */
+		 
 		if (session.getAttribute(Member.USER) != null) {
 			return "redirect:/";
 		}
@@ -42,13 +42,13 @@ public class MCValidation1 {
 		}
 		
 		
-		/*
+		
 		1. request에 있는 세션정보를 가져오기 
 		:: HttpServletRequest req 파라미터 추가
 		리퀘스트 객체에서 세션 꺼내와서 
 		로그인했음을 알려주기 :: session.setAttribute
 		로그인의 key는 고정 : __USER__ --> 상수로 변환함!! Member.USER
-		*/
+		
 		// 0306 :: HttpSession session = req.getSession();		
 		//ID : ADMIN PWD : 1234 --> 맞으면 리스트 틀리면 로그인으로
 		if ( memberVO.getAccount().equals("admin") && 
@@ -71,3 +71,4 @@ public class MCValidation1 {
 		return "redirect:/login";
 	}
 }
+*/

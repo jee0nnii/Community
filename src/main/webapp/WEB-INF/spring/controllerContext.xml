@@ -26,5 +26,10 @@
 		<property name="memberService" ref="memberService" />
 		<property name="communityService" ref="communityService" />
 	</bean>
+	
+	<!-- 0327 mysql -->
+	<bean id="actionHistoryController" class="com.ktds.actionhistory.web.ActionHistoryController">
+		<property name="actionHistoryService" ref="actionHistoryService"/>
+	</bean>
 
 </beans>

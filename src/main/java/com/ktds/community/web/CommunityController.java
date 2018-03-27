@@ -14,10 +14,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ktds.actionhistory.vo.ActionHistory;
+import com.ktds.actionhistory.vo.ActionHistoryVO;
 import com.ktds.community.service.CommunityService;
 import com.ktds.community.vo.CommunitySearchVO;
 import com.ktds.community.vo.CommunityVO;
@@ -210,7 +213,7 @@ public class CommunityController {
 	//게시글 수정하기
 	@RequestMapping(value = "/modify/{id}", method=RequestMethod.POST)
 	public String doModifyAction(@PathVariable int id, HttpSession session, HttpServletRequest request
-			,@ModelAttribute("writeForm") @Valid CommunityVO communityVO, Errors errors) {
+			,@ModelAttribute("writeForm") @Valid CommunityVO communityVO, Errors errors, @RequestAttribute ActionHistoryVO actionHistory) {
 		// 1. 이 글이 내 글이 맞는지
 		MemberVO member = (MemberVO)session.getAttribute(Member.USER);
 		CommunityVO originalVO = communityService.getOne(id); //원본 글
@@ -227,21 +230,31 @@ public class CommunityController {
 		
 		boolean isModify= false;
 		
+		String asIs = "";
+		String toBe = "";
+		
 		// 3. ip 변경 확인
 		String ip = request.getRemoteAddr();
 		if ( !ip.equals(originalVO.getRequestIP())) {
 			newCommunity.setRequestIP(ip);
 			isModify = true;
+			asIs += "IP : " + originalVO.getRequestIP() + "<br/>";
+			toBe += "IP : " + ip  + "<br/>";
 		}
 		// 4. 제목 변경 확인
 		if ( !originalVO.getTitle().equals(communityVO.getTitle())) {
 			newCommunity.setTitle(communityVO.getTitle());
 			isModify = true;
+			asIs += "Title : " + originalVO.getTitle() + "<br/>";
+			toBe += "Title : " + communityVO.getTitle() + "<br/>";
+			
 		}
 		//5. 내용 변경
 		if ( !originalVO.getContents().equals(communityVO.getContents())) {
 			newCommunity.setContents(communityVO.getContents());
 			isModify = true;
+			asIs += "Contents : " + originalVO.getContents() + "<br/>";
+			toBe += "Contents : " + communityVO.getContents() + "<br/>";
 		}
 		// 6-1 파일변경 확인
 		if(communityVO.getDisplayFilename().length()>0) {
@@ -260,7 +273,17 @@ public class CommunityController {
 		if ( !originalVO.getDisplayFilename().equals(communityVO.getDisplayFilename())) {
 			newCommunity.setDisplayFilename(communityVO.getDisplayFilename());
 			isModify = true;
+			asIs += "File : " + originalVO.getDisplayFilename() + "<br/>";
+			toBe += "File : " + communityVO.getDisplayFilename() + "<br/>";
+			
 		}
+		
+		actionHistory.setReqType(ActionHistory.ReqType.COMMUNITY);
+		String log = String.format(ActionHistory.Log.UPDATE, originalVO.getTitle(), originalVO.getContents());
+		actionHistory.setLog(log);
+		actionHistory.setAsIs(asIs);
+		actionHistory.setToBe(toBe);
+		
 		// 7. 변경이 없는지 확인
 		if(isModify) {
 			//update하는 서비스 호출
@@ -272,7 +295,8 @@ public class CommunityController {
 	
 	
 	@RequestMapping(value = "/deletePage/{id}")
-	public String doRemovePage(@PathVariable int id, HttpSession session) {
+	public String doRemovePage(@PathVariable int id, HttpSession session, @RequestAttribute ActionHistoryVO actionHistory) {
+		
 		//명시적 형변환!!
 		//primitive type 간의 형변환 :: long --> int : (int)varrr
 		//reference type 간의 형변환 :: 상속이나 구현 관계일 때만 형변환이 가능함
@@ -283,6 +307,11 @@ public class CommunityController {
 		CommunityVO community = communityService.getOne(id);
 		//이게 내가 쓴게 맞냐??를 묻고 지울 수 있게 해줌
 		boolean isMyCommunity = member.getAccount() == community.getAccount();
+		
+		actionHistory.setReqType(ActionHistory.ReqType.COMMUNITY);
+		String log = String.format(ActionHistory.Log.DELETE, community.getId(),community.getTitle(),community.getContents());
+		actionHistory.setLog(log);
+		
 		
 		//short cut 평가 : 내가 쓴 거 맞는지 확인을 하고 지우는게 맞음!! 
 		if(isMyCommunity && communityService.deleteCommunity(id)) {
