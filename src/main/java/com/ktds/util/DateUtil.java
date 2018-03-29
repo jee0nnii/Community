@@ -57,5 +57,4 @@ public class DateUtil {
 		
 		return makeDate(yearStr, monthStr, dateStr);
 	}
-	
 }

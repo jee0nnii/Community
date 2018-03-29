@@ -4,8 +4,8 @@ import io.github.seccoding.web.pager.annotations.EndRow;
 import io.github.seccoding.web.pager.annotations.StartRow;
 
 public class ActionHistorySearchVO {
-
-	private int pageNo;
+	//최초 검색임을 표시하고자 -1
+	private int pageNo = -1;
 	@StartRow
 	private int startRow;
 	@EndRow
