@@ -88,8 +88,10 @@ public class CommunityController {
 	}
 
 	/**
-	 * 파라미터 받아오는 방법이 여러가지임 1) public String doWrite(HttpHttpServletRequest req) {
-	 * String title = req.getParameter("title"); 2) 커맨드 객체 방법 ( vo를 통해서 값을 받아옴 )
+	 * 파라미터 받아오는 방법이 여러가지임 
+	 * 1) public String doWrite(HttpHttpServletRequest req) {
+	 * String title = req.getParameter("title"); 
+	 * 2) 커맨드 객체 방법 ( vo를 통해서 값을 받아옴 )
 	 * public String doWrite(CommunityVO communityVO) {
 	 * System.out.println(communityVO.getTitle());
 	 * System.out.println(communityVO.getContents());
