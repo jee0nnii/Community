@@ -77,7 +77,4 @@ public class CommunityDaoImplForOracle extends SqlSessionDaoSupport implements C
 		return getSqlSession().selectOne("CommunityDAO.selectCountAll",communitySearchVO);
 	}
 
-	
-	
-	
 }
